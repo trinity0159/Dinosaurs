@@ -89,12 +89,11 @@ function DinoData() {
         this.fact = fact;
     }
 
-
-
     // Create Dino Objects
-
+    let dinos = DinoData();
 
     // Create Human Object
+
 
     // Use IIFE to get human data from form
 
