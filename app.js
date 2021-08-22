@@ -93,10 +93,27 @@ function DinoData() {
     let dinos = DinoData();
 
     // Create Human Object
+    function Human (name, height, weight, diet){
+        this.name = name;
+        this.height = height;
+        this.weight = weight;
+        this.diet = diet;
+    }
 
+    let user = Human();
 
     // Use IIFE to get human data from form
-
+    const getUserDate = (
+        function () {
+            function getHumanData () {
+                user.name = document.getElementById('name').value;
+                user.height = parseInt(document.getElementById('feet').value) * 12 + parseInt(document.getElementById('inches').value);
+                user.weight = parseInt(document.getElementById('weight').value);
+                user.diet = document.getElementById('diet').value.toLowerCase();
+            }
+            return { user: getHumanData
+        }}
+        )();
 
     // Create Dino Compare Method 1
     // NOTE: Weight in JSON file is in lbs, height in inches. 
@@ -118,7 +135,7 @@ function DinoData() {
 
 
 // On button click, prepare and display infographic
-    function DinoGrid(){
-        // Remove form from screen
-        document.getElementById("dino-compare").style.display = "none"
-}
+        document.getElementById('btn').addEventListener('click', function () {
+            document.getElementById('dino-compare').style.display = "none";
+            getUserDate.user();
+})
