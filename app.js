@@ -79,18 +79,19 @@ function DinoData() {
 }
 
     // Create Dino Constructor
-    function Dinosaurs (species, weight, height, diet, where, when, fact){
-        this.species = species;
-        this.weight = weight;
-        this.height = height;
-        this.deit = diet;
-        this.where = where;
-        this.when = when;
-        this.fact = fact;
+    function Dinosaurs (dinoProperties){
+        this.species = dinoProperties.species;
+        this.weight = dinoProperties.weight;
+        this.height = dinoProperties.height;
+        this.diet = dinoProperties.diet;
+        this.where = dinoProperties.where;
+        this.when = dinoProperties.when;
+        this.fact = dinoProperties.fact;
     }
 
     // Create Dino Objects
-    let dinos = DinoData();
+    const dinoArray = DinoData();
+    const dinos = dinoArray.map(x => new Dinosaurs(x));
 
     // Create Human Object
     function Human (name, height, weight, diet){
@@ -100,42 +101,137 @@ function DinoData() {
         this.diet = diet;
     }
 
-    let user = Human();
+    let user = new Human();
 
     // Use IIFE to get human data from form
-    const getUserDate = (
+    const userData = (
         function () {
-            function getHumanData () {
+            function getHumanData() {
                 user.name = document.getElementById('name').value;
                 user.height = parseInt(document.getElementById('feet').value) * 12 + parseInt(document.getElementById('inches').value);
                 user.weight = parseInt(document.getElementById('weight').value);
                 user.diet = document.getElementById('diet').value.toLowerCase();
             }
-            return { user: getHumanData
-        }}
-        )();
 
-    // Create Dino Compare Method 1
-    // NOTE: Weight in JSON file is in lbs, height in inches. 
+            return {
+                user: getHumanData
+            }
+        })();
 
-    
+    // Create Dino Compare Method 1 - Compare Name/Species
+    // NOTE: Weight in JSON file is in lbs, height in inches.
+
+    function compareWeight(dino, user){
+        let factWeight;
+
+        if (dino.weight > user.weight){
+            factWeight =  `The ${dino.species} weighs more than you.`;
+        }
+        else if (dino.weight < user.weight){
+            factWeight = `You weight more than ${dino.species}.`;
+        }
+        else
+            factWeight = `You and the ${dino.species} are the same weight.`;
+        return factWeight;
+    }
+
     // Create Dino Compare Method 2
     // NOTE: Weight in JSON file is in lbs, height in inches.
 
-    
+    function compareHeight(dino, user){
+        let factHeight;
+
+        if (dino.height > user.height){
+            factHeight = `The ${dino.species} is taller than you.`;
+        }
+        else if (dino.height < user.height){
+            factHeight = `You are taller than the ${dino.species}.`;
+        }
+        else
+            factHeight = `You and the ${dino.species} are the same height.`;
+
+        return factHeight;
+    }
+
     // Create Dino Compare Method 3
     // NOTE: Weight in JSON file is in lbs, height in inches.
 
+    function compareDiet(dino, user){
+        let factDiet;
+
+        if (dino.diet === user.diet){
+            factDiet = `You and  the ${dino.species} do not have the same diet`;
+        }
+        else
+            factDiet = `You and  the ${dino.species} have the same diet`;
+        return factDiet;
+    }
+
 
     // Generate Tiles for each Dino in Array
-  
-        // Add tiles to DOM
 
+    function getDinoFact(dino){
+
+    }
+    function createDinoTile(dino){
+        let newFact;
+        let randNum = Math.floor(Math.random() * 5);
+        switch (randNum){
+            case 0:
+                newFact = compareWeight(dino, user);
+                break;
+            case 1:
+                newFact = compareHeight(dino, user);
+                break;
+            case 2:
+                newFact = compareDiet(dino, user);
+                break;
+            case 3:
+                newFact = `${dino.species} lived in ${dino.where}`;
+                break;
+            case 4:
+                newFact = `${dino.species} lived during ${dino.when}`;
+                break;
+            case 5:
+                newFact = $dino.fact;
+        }
+        if (dino.species == 'Pigeon'){
+            newFact = dino.fact;
+        }
+
+        const dinoGrid = document.createElement('div');
+        dinoGrid.className = 'grid-item';
+        dinoGrid.innerHTML = `<h3>${dino.species}</h3><img src="images/${dino.species.toLowerCase()}.png"/><p>${newFact}</p>`;
+        return dinoGrid;
+
+    }
+    function createHumanTile(user){
+        const userGrid = document.createElement('div');
+        userGrid.className = 'grid-item';
+        userGrid.innerHTML = `<h3>${user.name}</h3><img src="images/human.png"/><p>`;
+        return userGrid;
+    }
+        // Add tiles to DOM
+    function createGrid(){
+        userData.user();
+        compareWeight(dinos[4], user);
+        compareHeight(dinos[4], user);
+        compareDiet(dinos[4], user);
+        let mainGrid = document.getElementById('grid');
+        let i = 0;
+        for(let i=0; i<9; i++){
+            if (i==4){
+                mainGrid.appendChild(createHumanTile(user));
+            }
+            mainGrid.appendChild(createDinoTile(dinos[i]));
+        }
+        return mainGrid;
+    }
 
 
 
 // On button click, prepare and display infographic
         document.getElementById('btn').addEventListener('click', function () {
             document.getElementById('dino-compare').style.display = "none";
-            getUserDate.user();
+            createGrid();
 })
